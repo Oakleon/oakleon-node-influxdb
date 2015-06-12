@@ -1,0 +1,27 @@
+{
+  "name": "oakleon-node-influxdb",
+  "version": "0.0.1",
+  "description": "node driver for influxdb",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Oakleon/oakleon-node-influxdb.git"
+  },
+  "keywords": [
+    "node",
+    "influxdb",
+    "oakleon"
+  ],
+  "author": "tim@oakleon.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Oakleon/oakleon-node-influxdb/issues"
+  },
+  "homepage": "https://github.com/Oakleon/oakleon-node-influxdb#readme",
+  "dependencies": {
+    "request": "^2.57.0"
+  }
+}
