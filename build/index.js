@@ -47,9 +47,16 @@ require("source-map-support").install();
 
 	"use strict";
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
 	__webpack_require__(1);
 	
 	console.log("foobar");
+	
+	var foo = "bar";
+	exports.foo = foo;
 
 /***/ },
 /* 1 */

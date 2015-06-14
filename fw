@@ -1,0 +1,14 @@
+#!/bin/bash
+ 
+#Notifies you when a watch/build script dies on OS X (easy to modify for linux though)
+#Installation: put this into e.g. ~/bin/ (make sure your PATH variable points there)
+#run e.g. `fw gulp`
+ 
+trap exit SIGINT
+ 
+while [ 0 ]; do
+    "$@"
+    # if [ "$?" -ne "0" ]; then
+    #     afplay -v 10 /System/Library/Sounds/Frog.aiff
+    # fi
+done;

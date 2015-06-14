@@ -1,10 +1,17 @@
-var assert = require("better-assert")
+import assert from "better-assert";
+import * as influxdb from "../src/index";
 
 describe('Array', function(){
-  describe('#indexOf()', function(){
-    it('should return -1 when the value is not present', function(){
-      assert(-1 === [1,2,3].indexOf(5));
-      assert(-1 === [1,2,3].indexOf(0));
+    
+    describe('create()', function(){
+        it('should create a new influxdb database', function(){
+            influxdb.create("http://dockerbox:8086", null, null, "foottest")
+        })
+    }) 
+     
+    describe('showMeasurements()', function(){
+        it('should create a new influxdb database', function(){
+            influxdb.showMeasurements("http://dockerbox:8086", null, null)
+        })
     })
-  })
 })

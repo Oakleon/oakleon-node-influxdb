@@ -2,7 +2,7 @@
   "name": "oakleon-node-influxdb",
   "version": "0.0.1",
   "description": "node driver for influxdb",
-  "main": "influxdb.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "mocha --compilers js:babel/register"
   },
@@ -22,7 +22,8 @@
   },
   "homepage": "https://github.com/Oakleon/oakleon-node-influxdb#readme",
   "dependencies": {
-    "request": "^2.57.0"
+    "request": "^2.57.0",
+    "request-promise": "^0.4.2"
   },
   "devDependencies": {
     "babel": "^5.5.6",
