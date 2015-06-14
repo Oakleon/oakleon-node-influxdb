@@ -4,7 +4,7 @@
   "description": "node driver for influxdb",
   "main": "src/index.js",
   "scripts": {
-    "test": "mocha --compilers js:babel/register"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/Oakleon/oakleon-node-influxdb#readme",
   "dependencies": {
+    "lodash": "^3.9.3",
     "request": "^2.57.0",
     "request-promise": "^0.4.2"
   },
