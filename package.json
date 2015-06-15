@@ -2,7 +2,7 @@
   "name": "oakleon-node-influxdb",
   "version": "0.0.1",
   "description": "node driver for influxdb",
-  "main": "src/index.js",
+  "main": "build/index.js",
   "scripts": {
     "test": "mocha"
   },
