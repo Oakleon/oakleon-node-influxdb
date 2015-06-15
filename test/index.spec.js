@@ -2,12 +2,12 @@ import assert from "better-assert";
 import * as influxdb from "../src/index";
 
 describe('Array', function(){
-    
+
     describe('create()', function(){
         it('should create a new influxdb database', function(done){
             influxdb.create("http://dockerbox:8086", null, null, "foottest")
             .then(function(result){
-                console.log(JSON.stringify(result,true,4))
+                assert(result.statusCode === 200)
                 done();
             })
             .catch((e)=>{
@@ -30,7 +30,6 @@ describe('Array', function(){
             assert("cpu_load,host=kube_minion_3,core=3 value=40.3 1434311740594" === line)
         })
     })
-
 
     describe('put()', function(){
         it('add some data', function(done){
@@ -55,16 +54,27 @@ describe('Array', function(){
 
             influxdb.put("http://dockerbox:8086", "foottest", points)
             .then(function(result){
-                //console.log(result)
-                //console.log(result.statusCode)
-                //console.log(JSON.stringify(result,true,4))
+                assert(result.statusCode === 204)
                 done();
             })
             .catch((e)=>{
                 done(e)
             })
         })
-    }) 
+    })
+
+    describe('drop()', function(){
+        it('should drop a new influxdb database', function(done){
+            influxdb.drop("http://dockerbox:8086", null, null, "foottest")
+            .then(function(result){
+                assert(result.statusCode === 200)
+                done();
+            })
+            .catch((e)=>{
+                done(e)
+            })
+        })
+    })
      
     // describe('showMeasurements()', function(){
     //     it('should create a new influxdb database', function(done){
