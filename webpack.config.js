@@ -11,8 +11,10 @@ fs.readdirSync('node_modules')
     nodeModules[mod] = 'commonjs ' + mod;
   });
 
+  console.log(nodeModules)
+
 module.exports = {
-  entry: './src/index.js',
+  entry: './build/index.js',
   target: 'node',
   output: {
     path: path.join(__dirname, 'build'),
@@ -25,9 +27,7 @@ module.exports = {
   },
   externals: nodeModules,
   plugins: [
-    new webpack.IgnorePlugin(/\.(css|less)$/),
-    new webpack.BannerPlugin('require("source-map-support").install();',
-                             { raw: true, entryOnly: false })
+    new webpack.BannerPlugin('require("source-map-support").install();',{ raw: true, entryOnly: false })
   ],
   devtool: 'sourcemap'
 }

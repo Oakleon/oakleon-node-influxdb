@@ -63,6 +63,39 @@ describe('Array', function(){
         })
     })
 
+    describe('es5 put()', function(){
+        it('use the build es5 to add some data', function(done){
+
+            var es5_influxdb = require("../build/index.js")
+
+            var p1 = {
+                measurement: "cpu_load",
+                time: 1434311740594,
+                value: 40,
+                tags:{"host":"kube_minion_3", core:"a3"}
+            }
+
+            var p2 = {
+                measurement: "cpu_load",
+                time: 1434313704006,
+                value: 12,
+                tags:{"host":"kube_minion_3", core:"a3"}
+            }
+
+            
+            var points = [p1,p2];
+
+            es5_influxdb.put("http://dockerbox:8086", "foottest", points)
+            .then(function(result){
+                assert(result.statusCode === 204)
+                done();
+            })
+            .catch((e)=>{
+                done(e)
+            })
+        })
+    })
+
     describe('drop()', function(){
         it('should drop a new influxdb database', function(done){
             influxdb.drop("http://dockerbox:8086", null, null, "foottest")
