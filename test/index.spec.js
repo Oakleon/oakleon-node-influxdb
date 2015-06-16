@@ -66,8 +66,8 @@ describe('Array', function(){
     describe('es5 put()', function(){
         it('use the build es5 to add some data', function(done){
 
-            var es5_influxdb = require("../build/index.js")
-
+            var es5_influxdb = require("../build/index.js");
+            debugger;
             var p1 = {
                 measurement: "cpu_load",
                 time: 1434311740594,
