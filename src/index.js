@@ -36,13 +36,13 @@ import assert from "better-assert";
 
 export var put = function put(endpoint, database_name, points) {
 
-    if(!endpoint)       throw new Error("endpoint is required")
-    if(!database_name)  throw new Error("database_name is required")
-    if(!points)         throw new Error("points is required")
+    if(!endpoint)       throw new Error("endpoint is required");
+    if(!database_name)  throw new Error("database_name is required");
+    if(!points)         throw new Error("points is required");
 
     var body = lo.map(points, (p)=>{
         return formatPoint(p);
-    }).join("\n")
+    }).join("\n");
 
     var options = {
         method: 'POST',
@@ -50,14 +50,14 @@ export var put = function put(endpoint, database_name, points) {
         url: `${endpoint}/write`,
         resolveWithFullResponse: true,
         body:body
-    }
+    };
 
     return rp(options)
     .then((request)=>{
-        bodyCheck(request.body)
+        bodyCheck(request.body);
         return request;
-    })
-}
+    });
+};
 
 export var create = function create(endpoint, user, pass, name) {
 
@@ -65,14 +65,14 @@ export var create = function create(endpoint, user, pass, name) {
         method: 'GET',
         uri: `${endpoint}/query?q=CREATE DATABASE ${name}`,
         resolveWithFullResponse: true
-    }
+    };
 
     return rp(options)
     .then((request)=>{
-        bodyCheck(request.body)
+        bodyCheck(request.body);
         return request;
-    })
-}
+    });
+};
 
 export var drop = function drop(endpoint, user, pass, name) {
 
@@ -80,30 +80,29 @@ export var drop = function drop(endpoint, user, pass, name) {
         method: 'GET',
         uri: `${endpoint}/query?q=DROP DATABASE ${name}`,
         resolveWithFullResponse: true
-    }
+    };
 
     return rp(options)
     .then((request)=>{
-        bodyCheck(request.body)
+        bodyCheck(request.body);
         return request;
-    })
-}
+    });
+};
 
 
 export var showMeasurements = function showMeasurements(endpoint, user, pass) {
 
-
     var options = {
         method: 'GET',
         uri: `${endpoint}/query?q=SHOW MEASUREMENTS`,
-    }
+    };
 
     return rp(options)
     .then((request)=>{
-        bodyCheck(request.body)
+        bodyCheck(request.body);
         return request;
-    })
-}
+    });
+};
 
 ///////////////////////////////////////////////////////////////////
 //
@@ -123,10 +122,31 @@ function autoParse(body, response) {
 
 export var formatPoint = function formatPoint(p) {
     var kv_pairs = lo.map(p.tags, (v,k)=>{
-        return `${k}=${v}`
-    }).join(",")
+        return `${formatKeyString(k)}=${formatTagValue(v)}`;
+    }).join(",");
 
-    return `${p.measurement},${kv_pairs} value=${p.value} ${p.time}`
+    return `${formatKeyString(p.measurement)},${kv_pairs} value=${formatMeasureValue(p.value)} ${p.time}`;
+};
+
+function formatKeyString(tag_key) {
+    return tag_key.replace(/,/g, '\\,').replace(/ /g, '\\ ');
+}
+
+function formatTagValue(tag_value) {
+    if (tag_value === true) {
+        return "true";
+    }
+    if (tag_value === false) {
+        return "false";
+    }
+    return formatKeyString(tag_value);
+}
+
+function formatMeasureValue(value) {
+    if (typeof value === 'string') {
+        return `"${value}"`;
+    }
+    return value;
 }
 
 // we need to look in the body for errors as the influxdb api
@@ -139,5 +159,4 @@ var bodyCheck = function bodyCheck(body) {
     }
 
     if(body.results && body.results[0] && body.results[0].error) throw new Error(body.results[0].error);
-}
-
+};

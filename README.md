@@ -1,5 +1,7 @@
 # oakleon-node-influxdb
 
+For API line format see:  
+<https://github.com/influxdb/influxdb/blob/master/tsdb/README.md>
 
 You need a influxdb instance up to run the tests
 
