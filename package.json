@@ -1,6 +1,6 @@
 {
   "name": "oakleon-node-influxdb",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "node driver for influxdb",
   "main": "build/index.js",
   "scripts": {
