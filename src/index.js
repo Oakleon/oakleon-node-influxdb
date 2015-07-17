@@ -1,6 +1,5 @@
 import rp from "request-promise";
 import lo from "lodash";
-import assert from "better-assert";
 
 //rp.debug = true;
 
@@ -142,11 +141,15 @@ function formatTagValue(tag_value) {
     return formatKeyString(tag_value);
 }
 
-function formatMeasureValue(value) {
-    if (typeof value === 'string') {
-        return `"${value}"`;
+function formatMeasureValue(str) {
+    //Assume a string of all numbers is supposed to be an int or float
+    //influxdb will then parse the string and set the type
+    if (typeof str !== 'string' || str.match(/^[0-9\.]+$/)) {
+        return str;
     }
-    return value;
+
+    //string values need to be quoted
+    return `"${str}"`;
 }
 
 // we need to look in the body for errors as the influxdb api
