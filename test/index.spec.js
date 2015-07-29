@@ -1,12 +1,14 @@
-import assert from "better-assert";
 import * as influxdb from "../src/index";
+import lo from "lodash";
+import moment from "moment";
+import {expect} from 'chai';
 
 describe('Influx', function(){
 
     before(function(done){
         influxdb.create("http://dockerbox:8086", null, null, "foottest")
         .then(function(result){
-            assert(result.statusCode === 200);
+            expect(result.statusCode).to.equal(200);
             done();
         })
         .catch((e)=>{
@@ -17,7 +19,7 @@ describe('Influx', function(){
     after(function(done){
         influxdb.drop("http://dockerbox:8086", null, null, "foottest")
         .then(function(result){
-            assert(result.statusCode === 200);
+            expect(result.statusCode).to.equal(200);
             done();
         })
         .catch((e)=>{
@@ -32,11 +34,11 @@ describe('Influx', function(){
                 measurement: "cpu_load",
                 time: 1434311740594,
                 value: 40.3,
-                tags:{"host":"kube_minion_3", core:"3"}
+                tags: {"host": "kube_minion_3", core: "3"}
             };
 
             var line = influxdb.formatPoint(p);
-            assert("cpu_load,host=kube_minion_3,core=3 value=40.3 1434311740594" === line);
+            expect(line).to.equal("cpu_load,host=kube_minion_3,core=3 value=40.3 1434311740594");
         });
         it('properly formats key parts with spaces, commas', function(){
 
@@ -44,11 +46,11 @@ describe('Influx', function(){
                 measurement: "cpu load",
                 time: 1434311740594,
                 value: 40.3,
-                tags:{"h,ost":"kube minion 3", core:"3,"}
+                tags: {"h,ost": "kube minion 3", core: "3,"}
             };
 
             var line = influxdb.formatPoint(p);
-            assert("cpu\\ load,h\\,ost=kube\\ minion\\ 3,core=3\\, value=40.3 1434311740594" === line);
+            expect(line).to.equal("cpu\\ load,h\\,ost=kube\\ minion\\ 3,core=3\\, value=40.3 1434311740594");
         });
     });
 
@@ -59,21 +61,21 @@ describe('Influx', function(){
                 measurement: "cpu_load",
                 time: 1434311740594,
                 value: 40,
-                tags:{"host":"kube_minion_3", core:"a3"}
+                tags: {"host": "kube_minion_3", core: "a3"}
             };
 
             var p2 = {
                 measurement: "cpu_load",
                 time: 1434313704006,
                 value: 12,
-                tags:{"host":"kube_minion_3", core:"a3"}
+                tags: {"host": "kube_minion_3", core: "a3"}
             };
 
-            var points = [p1,p2];
+            var points = [p1, p2];
 
             influxdb.put("http://dockerbox:8086", "foottest", points)
             .then(function(result){
-                assert(result.statusCode === 204);
+                expect(result.statusCode).to.equal(204);
                 done();
             })
             .catch((e)=>{
@@ -87,24 +89,59 @@ describe('Influx', function(){
                 measurement: "error with thing",
                 time: 1434311740594,
                 value: "Hey: string goes here",
-                tags:{"host":"kube minion 3", core:"a,3"}
+                tags: {"host": "kube minion 3", core: "a,3"}
             };
 
             var p2 = {
                 measurement: "error with thing",
                 time: 1434313704006,
                 value: "Hey: string goes here now",
-                tags:{"host":"kube minion 3", core:"a,3"}
+                tags: {"host": "kube minion 3", core: "a,3"}
             };
 
-            var points = [p1,p2];
+            var points = [p1, p2];
 
             influxdb.put("http://dockerbox:8086", "foottest", points)
             .then(function(result){
-                assert(result.statusCode === 204);
+                expect(result.statusCode).to.equal(204);
                 done();
             })
             .catch((e)=>{
+                done(e);
+            });
+        });
+    });
+
+    describe('query()', function(){
+        it('queries data from the DB', function(done){
+
+            var p1 = {
+                measurement: "cpu_load",
+                time: moment().valueOf(),
+                value: 50,
+                tags: {"host": "kube_minion_3", core: "a3"}
+            };
+
+            var p2 = {
+                measurement: "cpu_load",
+                time: moment().valueOf() - 1,
+                value: 52,
+                tags: {"host": "kube_minion_3", core: "a3"}
+            };
+
+            var points = [p1, p2];
+
+            influxdb.put("http://dockerbox:8086", "foottest", points)
+            .then(function(){
+                return influxdb.query({protocol: 'http', host: 'dockerbox', port: '8086', database: 'foottest', query_string: 'SELECT value FROM cpu_load WHERE time > NOW() - 10s'});
+            })
+            .then( (result) => {
+                let vals = lo.pluck(result[0], 'value');
+                expect(vals).to.contain(50);
+                expect(vals).to.contain(52);
+                done();
+            })
+            .catch( (e) =>{
                 done(e);
             });
         });
@@ -118,22 +155,22 @@ describe('Influx', function(){
                 measurement: "cpu_load",
                 time: 1434311740594,
                 value: 40,
-                tags:{"host":"kube_minion_3", core:"a3"}
+                tags: {"host": "kube_minion_3", core: "a3"}
             };
 
             var p2 = {
                 measurement: "cpu_load",
                 time: 1434313704006,
                 value: 12,
-                tags:{"host":"kube_minion_3", core:"a3"}
+                tags: {"host": "kube_minion_3", core: "a3"}
             };
 
 
-            var points = [p1,p2];
+            var points = [p1, p2];
 
             es5_influxdb.put("http://dockerbox:8086", "foottest", points)
             .then(function(result){
-                assert(result.statusCode === 204);
+                expect(result.statusCode).to.equal(204);
                 done();
             })
             .catch((e)=>{

@@ -1,6 +1,6 @@
 {
   "name": "oakleon-node-influxdb",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "node driver for influxdb",
   "main": "build/index.js",
   "scripts": {
@@ -23,10 +23,13 @@
   },
   "homepage": "https://github.com/Oakleon/oakleon-node-influxdb#readme",
   "dependencies": {
-    "lodash": "^3.9.3",
+    "bluebird": "^2.9.34",
+    "influx": "~4.0.1",
+    "lodash": "~3.10.0",
     "request-promise": "^0.4.2"
   },
   "devDependencies": {
-    "better-assert": "^1.0.2"
+    "chai": "^3.2.0",
+    "moment": "^2.10.6"
   }
 }

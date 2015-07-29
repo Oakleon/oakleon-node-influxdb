@@ -1,5 +1,7 @@
 # oakleon-node-influxdb
 
+A client library for InfluxDB 0.9+ using promises
+
 For API line format see:  
 <https://github.com/influxdb/influxdb/blob/master/tsdb/README.md>
 
