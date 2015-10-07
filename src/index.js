@@ -157,11 +157,18 @@ function formatTagValue(tag_value) {
     return formatKeyString(tag_value);
 }
 
-function formatMeasureValue(str) {
-    //Assume a string of all numbers is supposed to be an int or float
-    //influxdb will then parse the string and set the type
-    if (typeof str !== 'string' || str.match(/^[0-9\.]+$/)) {
+export function formatMeasureValue(str) {
+    if (typeof str !== 'string') {
+        throw new Error('all values must be strings, otherwise floats and ints will be conflated');
+    }
+
+    //Assume a string with a period is a float and without is an integer
+    if (str.match(/^[0-9]*\.[0-9]+$/)) {
         return str;
+    }
+
+    if (str.match(/^[0-9]+$/)) {
+        return `${str}i`;   //integers must have a trailing i
     }
 
     //string values need to be quoted

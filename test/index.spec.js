@@ -33,7 +33,7 @@ describe('Influx', function(){
             var p = {
                 measurement: "cpu_load",
                 time: 1434311740594,
-                value: 40.3,
+                value: "40.3",
                 tags: {"host": "kube_minion_3", core: "3"}
             };
 
@@ -45,12 +45,25 @@ describe('Influx', function(){
             var p = {
                 measurement: "cpu load",
                 time: 1434311740594,
-                value: 40.3,
+                value: "40.3",
                 tags: {"h,ost": "kube minion 3", core: "3,"}
             };
 
             var line = influxdb.formatPoint(p);
             expect(line).to.equal("cpu\\ load,h\\,ost=kube\\ minion\\ 3,core=3\\, value=40.3 1434311740594");
+        });
+    });
+
+    describe('formatMeasureValue()', function(){
+        it('make sure int-strings are properly formatted for influxdb line protocol', function(){
+            expect(influxdb.formatMeasureValue("3")).to.equal("3i");
+        });
+        it('make sure float-strings are properly formatted for influxdb line protocol', function(){
+            expect(influxdb.formatMeasureValue("3.0")).to.equal("3.0");
+            expect(influxdb.formatMeasureValue(".1")).to.equal(".1");
+        });
+        it('make sure string-strings are properly formatted for influxdb line protocol', function(){
+            expect(influxdb.formatMeasureValue("string")).to.equal('"string"');
         });
     });
 
@@ -60,14 +73,14 @@ describe('Influx', function(){
             var p1 = {
                 measurement: "cpu_load",
                 time: 1434311740594,
-                value: 40,
+                value: "40",
                 tags: {"host": "kube_minion_3", core: "a3"}
             };
 
             var p2 = {
                 measurement: "cpu_load",
                 time: 1434313704006,
-                value: 12,
+                value: "12",
                 tags: {"host": "kube_minion_3", core: "a3"}
             };
 
@@ -118,14 +131,14 @@ describe('Influx', function(){
             var p1 = {
                 measurement: "cpu_load",
                 time: moment().valueOf(),
-                value: 50,
+                value: "50",
                 tags: {"host": "kube_minion_3", core: "a3"}
             };
 
             var p2 = {
                 measurement: "cpu_load",
                 time: moment().valueOf() - 1,
-                value: 52,
+                value: "52",
                 tags: {"host": "kube_minion_3", core: "a3"}
             };
 
@@ -154,14 +167,14 @@ describe('Influx', function(){
             var p1 = {
                 measurement: "cpu_load",
                 time: 1434311740594,
-                value: 40,
+                value: "40",
                 tags: {"host": "kube_minion_3", core: "a3"}
             };
 
             var p2 = {
                 measurement: "cpu_load",
                 time: 1434313704006,
-                value: 12,
+                value: "12",
                 tags: {"host": "kube_minion_3", core: "a3"}
             };
 
